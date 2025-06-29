@@ -1,17 +1,32 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import Portfolio from './pages/Portfolio';
-import Settings from './pages/setting';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AuthPage from "./components/authpage";
+import Dashboard from "./pages/Dashboard";
+import Portfolio from "./pages/Portfolio";
+import PrivateRoute from "./privateroute";
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/portfolio"
+          element={
+            <PrivateRoute>
+              <Portfolio />
+            </PrivateRoute>
+          }
+        />
+        <Route path="*" element={<AuthPage />} />
       </Routes>
     </Router>
   );

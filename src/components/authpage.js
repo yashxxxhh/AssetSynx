@@ -1,45 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useEffect } from "react";
 
-const AuthPage = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+function AuthPage() {
+
+  useEffect(() => {
+    localStorage.clear();
+    alert("Local storage cleared on default page load.");
+  }, []);
+
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+
+    const handleAuth = (e) => {
     e.preventDefault();
-    // Simple validation (optional)
-    if (email && password) {
-      onLogin(); // tell App logged in
+    if (isLogin) {
+      const stored = JSON.parse(localStorage.getItem("user"));
+      if (stored && stored.email === email && stored.password === password) {
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "/dashboard";
+      } else {
+        alert("Invalid credentials. Please sign up first.");
+      }
     } else {
-      alert('Enter email and password');
+      if (localStorage.getItem("user")) {
+        alert("Account already exists. Please log in instead.");
+        setIsLogin(true);
+        return;
+      }
+      localStorage.setItem("user", JSON.stringify({ email, password }));
+      alert("User registered, please login");
+      setIsLogin(true);
     }
   };
 
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-800">Login to Assetsynx</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 mb-6 border border-gray-300 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" className="w-full bg-blue-800 text-white py-2 rounded hover:bg-blue-700">
-          Login
+    <div className="flex items-center justify-center min-h-screen bg-blue-100">
+      <div className="bg-white p-8 rounded shadow w-96">
+        <h1 className="text-2xl mb-4 text-blue-800 font-bold">
+          {isLogin ? "Login" : "Signup"}
+        </h1>
+        <form onSubmit={handleAuth} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            className="border p-2 w-full rounded"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="border p-2 w-full rounded"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700"
+          >
+            {isLogin ? "Login" : "Signup"}
+          </button>
+        </form>
+        <button
+          className="mt-4 text-blue-600 underline"
+          onClick={() => setIsLogin(!isLogin)}
+        >
+          {isLogin ? "Create new account" : "Already have an account?"}
         </button>
-      </form>
+      </div>
     </div>
   );
-};
+}
 
 export default AuthPage;

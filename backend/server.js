@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 
-import authRoutes from './auth.js';
 import assetRoutes from './Asset.js';
+import authRoutes from './auth.js';
 
 dotenv.config();
 const app = express();

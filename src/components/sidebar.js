@@ -13,8 +13,8 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-  localStorage.removeItem('authToken');  // clear token if you use it
-  window.location.href = '/login';       // simple hard redirect to login page
+  localStorage.removeItem('authToken'); 
+  window.location.href = '/login';       
 };
 
 
@@ -23,7 +23,7 @@ export default function Sidebar() {
       className={`flex flex-col h-screen bg-blue-900 text-white transition-width duration-300
       ${isCollapsed ? 'w-16' : 'w-64'}`}
     >
-      {/* Logo + Toggle */}
+    
       <div className="flex items-center justify-between p-4 border-b border-blue-700">
         {!isCollapsed && <h1 className="text-xl font-bold tracking-wide">Assetsynx</h1>}
         <button
@@ -35,7 +35,7 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* Nav Links */}
+    
       <nav className="flex flex-col flex-grow mt-4">
         {links.map(({ path, label, icon }) => (
           <NavLink
@@ -52,7 +52,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Account icon bottom right + Logout */}
+      
       <div className="mt-auto p-4 border-t border-blue-700 flex flex-col gap-2">
         <div className="flex items-center justify-end gap-2">
           {!isCollapsed && <span className="text-sm text-blue-300">Account</span>}
@@ -61,7 +61,7 @@ export default function Sidebar() {
           </button>
         </div>
 
-        {/* Logout button */}
+      
         <button
           onClick={handleLogout}
           className="flex items-center justify-end gap-2 text-red-400 hover:text-red-600 focus:outline-none"
