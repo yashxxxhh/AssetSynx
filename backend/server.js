@@ -17,7 +17,6 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log(err));
 
-// use ESM imports here
 app.use('/api/auth', authRoutes);
 app.use('/api/assets', assetRoutes);
 
