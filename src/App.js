@@ -3,6 +3,9 @@ import AuthPage from "./components/authpage";
 import Dashboard from "./pages/Dashboard";
 import Portfolio from "./pages/Portfolio";
 import PrivateRoute from "./privateroute";
+import Settings from "./pages/settings";
+
+
 
 
 function App() {
@@ -26,6 +29,15 @@ function App() {
             </PrivateRoute>
           }
         />
+ <Route
+  path="/settings"
+  element={
+    <PrivateRoute>
+      <Settings />
+    </PrivateRoute>
+  }
+/>
+
         <Route path="*" element={<AuthPage />} />
       </Routes>
     </Router>
