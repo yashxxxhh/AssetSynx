@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import Sidebar from '../components/sidebar';
 import {
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
 } from 'recharts';
+import Sidebar from '../components/sidebar';
 
 function Dashboard() {
   const [chartData, setChartData] = useState([]);

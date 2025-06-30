@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAssets, addAsset } from '../controlle/assetController.js';
+import { addAsset, getAssets } from '../controlle/assetController.js';
 import verifyToken from './auth.js';
 
 const router = express.Router();
