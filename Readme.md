@@ -45,7 +45,7 @@ User assets are evaluated using S&P 500 historical data.
 | Graph Logic | Correlation + BFS |
 | Risk Engine | Standard Deviation, Value at Risk (VaR) |
 | Optimization| Modern Portfolio Theory (MPT), Sharpe Ratio |
-| AI Layer    | Rule-based NLP |
+| AI Layer    | LLM Based(using ollama ) |
 
 ---
 
