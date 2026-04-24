@@ -1,8 +1,18 @@
-import { useState, useEffect, useContext, createContext, useRef, useCallback } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
-  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Legend,
-  BarChart, Bar, ScatterChart, Scatter, ZAxis,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Scatter,
+  ScatterChart,
+  Tooltip,
+  XAxis, YAxis,
+  ZAxis
 } from "recharts";
 
 // ─── API LAYER ────────────────────────────────────────────────────
@@ -152,7 +162,6 @@ function Sidebar({ active, setPage }) {
           </div>
           <div>
             <div style={{ color:"#0f172a",fontWeight:800,fontSize:15 }}>AssetSynx AI</div>
-            <div style={{ color:"#94a3b8",fontSize:11,fontWeight:500 }}>Graph Edition</div>
           </div>
         </div>
       </div>
@@ -188,7 +197,7 @@ function Topbar({ backendStatus }) {
         <div style={{ width:8,height:8,borderRadius:"50%",background:backendStatus==="online"?"#10b981":"#ef4444" }}/>
         <span style={{ color:"#94a3b8" }}>{backendStatus==="online"?"Backend connected":"Backend offline — using local ML"}</span>
       </div>
-      <div style={{ width:34,height:34,borderRadius:"50%",background:"linear-gradient(135deg,#6366f1,#8b5cf6)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:"#fff" }}>JD</div>
+      <div style={{ width:34,height:34,borderRadius:"50%",background:"linear-gradient(135deg,#6366f1,#8b5cf6)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:"#fff" }}>User</div>
     </div>
   );
 }
@@ -732,32 +741,32 @@ function Portfolio() {
 // ─── AI ASSISTANT ─────────────────────────────────────────────────
 function AIAssistant() {
   const { assets } = usePort();
-  const [msgs,   setMsgs  ] = useState([{ role:"ai", text:"Hello! I'm your AssetSynx AI assistant. Ask me anything about your portfolio — risk, diversification, allocation, correlation, or performance." }]);
-  const [inp,    setInp   ] = useState("");
-  const [loading,setLoading]= useState(false);
+  const [msgs,    setMsgs   ] = useState([{ role:"ai", text:"Hello! I'm AssetSynx AI . I can answer any question about your portfolio using our graph engine, MPT, risk analysis, and more. Ask me anything!" }]);
+  const [inp,     setInp    ] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [status,  setStatus ] = useState("");
   const bottom = useRef(null);
 
   const send = async () => {
     if(!inp.trim()||loading) return;
     const question = inp;
     setInp("");
-    setMsgs(m=>[...m,{ role:"user",text:question }]);
+    setMsgs(m=>[...m,{ role:"user", text:question }]);
     setLoading(true);
+
     try {
-      const analysis = await apiCall("POST","/analyse",{ portfolio:assets });
-      const reply    = await apiCall("POST","/chat",{
-        portfolio:assets,
-        risk:analysis.risk,
-        graphInsights:{ diversification:analysis.diversification, concentration:analysis.concentration },
-        recommendations:analysis.recommendations,
+      setStatus("Analysing portfolio...");
+      const reply = await apiCall("POST", "/chat", {
+        portfolio: assets,
         question,
       });
-      setMsgs(m=>[...m,{ role:"ai",text:reply.text, source:reply.source }]);
+      setMsgs(m=>[...m,{ role:"ai", text:reply.text, source:reply.source }]);
     } catch(e) {
-      setMsgs(m=>[...m,{ role:"ai",text:"Backend unavailable. Check that server is running on port 3001." }]);
+      setMsgs(m=>[...m,{ role:"ai", text:"Backend unavailable. Make sure the backend is running on port 3001 and Ollama is running (ollama serve)." }]);
     } finally {
       setLoading(false);
-      setTimeout(()=>bottom.current?.scrollIntoView({ behavior:"smooth" }),80);
+      setStatus("");
+      setTimeout(()=>bottom.current?.scrollIntoView({ behavior:"smooth" }), 80);
     }
   };
 
@@ -767,7 +776,7 @@ function AIAssistant() {
     <div style={{ padding:"28px 28px 48px",background:"#f8fafc",display:"grid",gridTemplateColumns:"1fr 300px",gap:22,height:"calc(100vh - 56px)",boxSizing:"border-box" }}>
       <div style={{ display:"flex",flexDirection:"column",minHeight:0 }}>
         <h1 style={{ color:"#0f172a",fontSize:26,fontWeight:800,margin:"0 0 4px" }}>AI Assistant</h1>
-        <p style={{ color:"#94a3b8",margin:"0 0 18px",fontSize:14 }}>Powered by graph analysis + smart recommendations</p>
+        <p style={{ color:"#94a3b8",margin:"0 0 18px",fontSize:14 }}></p>
         <div style={{ flex:1,...S.card,display:"flex",flexDirection:"column",overflow:"hidden",padding:0,minHeight:0 }}>
           <div style={{ flex:1,overflowY:"auto",padding:"20px 20px 8px" }}>
             {msgs.map((m,i)=>(
@@ -804,7 +813,6 @@ function AIAssistant() {
         <div style={S.card}>
           <div style={{ color:"#0f172a",fontSize:13,fontWeight:700,marginBottom:10 }}>How It Works</div>
           <div style={{ color:"#64748b",fontSize:12,lineHeight:1.8 }}>
-            All answers are generated from your real portfolio data using the graph engine, risk model, and MPT calculations. No external AI API needed.
           </div>
         </div>
       </div>
